@@ -1,9 +1,11 @@
-.PHONY: build push start run test
+.PHONY: build push start run test git
 
 push:
 	@git add .
 	@git commit -m "pushed Make"
 	@git push origin develop
+
+git: push
 
 build: 
 	@go build -o build/apiserver -v ./cmd/apiserver
