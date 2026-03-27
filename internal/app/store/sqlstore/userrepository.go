@@ -1,6 +1,11 @@
 package sqlstore
 
-import "github.com/Terps489/RestAPI/internal/app/model"
+import (
+	"database/sql"
+
+	"github.com/Terps489/RestAPI/internal/app/model"
+	"github.com/Terps489/RestAPI/internal/app/store"
+)
 
 type UserRepository struct {
 	store *Store
@@ -20,7 +25,6 @@ func (r *UserRepository) Create(u *model.User) error {
 		u.Email,
 		u.EncryptedPassword,
 	).Scan(&u.ID)
-
 }
 
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
@@ -33,6 +37,10 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		&u.Email,
 		&u.EncryptedPassword,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, store.ErrRecordNotFounc
+		}
+
 		return nil, err
 	}
 	return u, nil

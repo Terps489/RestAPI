@@ -1,9 +1,8 @@
 package teststore
 
 import (
-	"errors"
-
 	"github.com/Terps489/RestAPI/internal/app/model"
+	"github.com/Terps489/RestAPI/internal/app/store"
 )
 
 type UserRepository struct {
@@ -29,7 +28,7 @@ func (r *UserRepository) Create(u *model.User) error {
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	u, ok := r.users[email]
 	if !ok {
-		return nil, errors.New("not found")
+		return nil, store.ErrRecordNotFounc
 	}
 
 	return u, nil
