@@ -18,6 +18,13 @@ func Start(config *Config) error {
 
 	store := sqlstore.New(db)
 	sessionsStore := sessions.NewCookieStore([]byte(config.SessionKey))
+	sessionsStore.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400 * 30,
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	}
 	srv := newServer(store, sessionsStore)
 
 	return http.ListenAndServe(config.BindAddr, srv)
